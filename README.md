@@ -1,3 +1,3 @@
 # waku-go-bindings-tests
 # Test framework design 
-(src/framework_design.png)
+![My Diagram](src/framework_design.png)
