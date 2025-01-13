@@ -1,5 +1,9 @@
 package main
 
+import (
+	"golang/util"
+)
+
 type WakuConfigData struct {
 	Host        string `json:"host,omitempty"`
 	Port        int    `json:"port,omitempty"`
@@ -11,11 +15,11 @@ type WakuConfigData struct {
 // Start starts the Waku node.
 func StartWakuNode(host string, port int, nodeKey string, enableRelay bool, logLevel string) WakuConfigData {
 	return WakuConfigData{
-		Host:        host,
-		Port:        port,
-		NodeKey:     nodeKey,
+		Host:        util.IfEmpty(host, "127.0.0.1"),
+		Port:        util.IfZero(port, 30304),
+		NodeKey:     util.IfEmpty(nodeKey, "default-node-key"),
 		EnableRelay: enableRelay,
-		LogLevel:    logLevel,
+		LogLevel:    util.IfEmpty(logLevel, "INFO"),
 	}
 }
 
