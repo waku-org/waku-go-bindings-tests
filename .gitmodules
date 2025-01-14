@@ -1,0 +1,3 @@
+[submodule "src/nwaku"]
+	path = src/nwaku
+	url = https://github.com/waku-org/nwaku
