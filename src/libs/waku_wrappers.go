@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"waku-go-bindings-tests/src/nwaku/examples/golang"
 	"waku-go-bindings-tests/src/utilities"
+	
 )
 
 type WakuConfigData struct {
@@ -28,11 +29,11 @@ func ConfigWakuNode(host string, port int, nodeKey string, enableRelay bool, log
 	}
 }
 
-// CreateWakuNode initializes a new Local Waku Node and returns WakuConfigData.
+// CreateWakuNode initializes a new Local Waku Node .
 func CreateWakuNode(config WakuConfigData) (*LocalWakuNode, error) {
 	node, err := golang.WakuNew(config.LocalConfigData)
 	if err != nil {
-		fmt.Println("Failed to create WakuNode:", err)
+		utilities.LogError("Failed to create WakuNode: " + err.Error())
 		return nil, err
 	}
 
@@ -43,7 +44,7 @@ func CreateWakuNode(config WakuConfigData) (*LocalWakuNode, error) {
 // This function starts an existing Waku Node.
 func StartWakuNode(localNode *LocalWakuNode) error {
 	if err := localNode.Node.WakuStart(); err != nil {
-		fmt.Println("Failed to start WakuNode:", err)
+		utilities.LogError("Failed to start WakuNode: " + err.Error())
 		return err
 	}
 
