@@ -1,70 +1,98 @@
-package main
+package libs
 
 import (
-	"golang/util"
+	"fmt"
+	"waku-go-bindings-tests/src/nwaku/examples/golang"
+	"waku-go-bindings-tests/src/utilities"
 )
 
 type WakuConfigData struct {
-	Host        string `json:"host,omitempty"`
-	Port        int    `json:"port,omitempty"`
-	NodeKey     string `json:"key,omitempty"`
-	EnableRelay bool   `json:"relay"`
-	LogLevel    string `json:"logLevel"`
+	LocalConfigData golang.WakuConfig
 }
 
-// Start starts the Waku node.
-func StartWakuNode(host string, port int, nodeKey string, enableRelay bool, logLevel string) WakuConfigData {
+type LocalWakuNode struct {
+	Node   *golang.WakuNode
+	Config WakuConfigData
+}
+
+// ConfigWakuNode generates a WakuConfigData with provided parameters.
+func ConfigWakuNode(host string, port int, nodeKey string, enableRelay bool, logLevel string) WakuConfigData {
 	return WakuConfigData{
-		Host:        util.IfEmpty(host, "127.0.0.1"),
-		Port:        util.IfZero(port, 30304),
-		NodeKey:     util.IfEmpty(nodeKey, "default-node-key"),
-		EnableRelay: enableRelay,
-		LogLevel:    util.IfEmpty(logLevel, "INFO"),
+		LocalConfigData: golang.WakuConfig{
+			Host:        utilities.IfEmpty(host, "127.0.0.1"),
+			Port:        utilities.IfZero(port, 30304),
+			NodeKey:     utilities.IfEmpty(nodeKey, "default-node-key"),
+			EnableRelay: enableRelay,
+			LogLevel:    utilities.IfEmpty(logLevel, "INFO"),
+		},
 	}
 }
 
+// CreateWakuNode initializes a new Local Waku Node and returns WakuConfigData.
+func CreateWakuNode(config WakuConfigData) (*LocalWakuNode, error) {
+	node, err := golang.WakuNew(config.LocalConfigData)
+	if err != nil {
+		fmt.Println("Failed to create WakuNode:", err)
+		return nil, err
+	}
+
+	fmt.Println("WakuNode created successfully!")
+	return &LocalWakuNode{Node: node, Config: config}, nil
+}
+
+// This function starts an existing Waku Node.
+func StartWakuNode(localNode *LocalWakuNode) error {
+	if err := localNode.Node.WakuStart(); err != nil {
+		fmt.Println("Failed to start WakuNode:", err)
+		return err
+	}
+
+	fmt.Println("WakuNode started successfully!")
+	return nil
+}
+
 // Stop stops the Waku node.
-func (node *WakuNode) Stop() error {
+func (node *LocalWakuNode) Stop() error {
 	return node.WakuStop()
 }
 
 // Destroy destroys the Waku node.
-func (node *WakuNode) Destroy() error {
+func (node *LocalWakuNode) Destroy() error {
 	return node.WakuDestroy()
 }
 
 // Version returns the Waku node version.
-func (node *WakuNode) Version() (string, error) {
+func (node *LocalWakuNode) Version() (string, error) {
 	return node.WakuVersion()
 }
 
 // RelayPublish publishes a message to a pubsub topic.
-func (node *WakuNode) RelayPublish(pubSubTopic, message string, timeoutMs int) error {
+func (node *LocalWakuNode) RelayPublish(pubSubTopic, message string, timeoutMs int) error {
 	_, err := node.WakuRelayPublish(pubSubTopic, message, timeoutMs)
 	return err
 }
 
 // RelaySubscribe subscribes to a pubsub topic.
-func (node *WakuNode) RelaySubscribe(pubSubTopic string) error {
+func (node *LocalWakuNode) RelaySubscribe(pubSubTopic string) error {
 	return node.WakuRelaySubscribe(pubSubTopic)
 }
 
 // RelayUnsubscribe unsubscribes from a pubsub topic.
-func (node *WakuNode) RelayUnsubscribe(pubSubTopic string) error {
+func (node *LocalWakuNode) RelayUnsubscribe(pubSubTopic string) error {
 	return node.WakuRelayUnsubscribe(pubSubTopic)
 }
 
 // Connect connects to a peer.
-func (node *WakuNode) Connect(peerMultiAddr string, timeoutMs int) error {
+func (node *LocalWakuNode) Connect(peerMultiAddr string, timeoutMs int) error {
 	return node.WakuConnect(peerMultiAddr, timeoutMs)
 }
 
 // ListenAddresses retrieves the node's listen addresses.
-func (node *WakuNode) ListenAddresses() (string, error) {
+func (node *LocalWakuNode) ListenAddresses() (string, error) {
 	return node.WakuListenAddresses()
 }
 
 // GetMyENR retrieves the node's ENR.
-func (node *WakuNode) GetMyENR() (string, error) {
+func (node *LocalWakuNode) GetMyENR() (string, error) {
 	return node.WakuGetMyENR()
 }
