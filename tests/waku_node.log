@@ -1,7 +1,17 @@
-DEBUG: 2025/01/16 17:21:36 logging.go:37: WakuNode started successfully!
-DEBUG: 2025/01/16 17:21:38 logging.go:37: Default pubsub topic: %s
+DEBUG: 2025/01/16 17:56:18 logging.go:37: Start node1 
+DEBUG: 2025/01/16 17:56:18 logging.go:37: Configure waku node with default values: 
+DEBUG: 2025/01/16 17:56:18 logging.go:37: Create waku node
+DEBUG: 2025/01/16 17:56:18 logging.go:37: Start waku node 
+DEBUG: 2025/01/16 17:56:22 logging.go:37: WakuNode started successfully!
+DEBUG: 2025/01/16 17:56:22 logging.go:37: Waku Node configured, created, and started successfully!
+DEBUG: 2025/01/16 17:56:22 logging.go:37: Sleep for 2 seconds
+DEBUG: 2025/01/16 17:56:24 logging.go:37: Default pubsub topic: %s
 /waku/2/rs/0/0
-DEBUG: 2025/01/16 17:21:38 logging.go:37: Successfully subscribed to Waku relay topic: /waku/2/rs/0/0
-DEBUG: 2025/01/16 17:21:38 logging.go:37: Waku ENR: enr:-Li4QFNxDK2AzKnq5DR8PQSLRnkScYUjO79vXODI2qJ8IUuNdqcJvXQQgC0bYKhkirTGJDaL0dHoUL4mFJAreQTbzcACgmlkgnY0gmlwhAAAAACKbXVsdGlhZGRyc4oACATAqAEHBupggnJzkwAACAAAAAEAAgADAAQABQAGAAeJc2VjcDI1NmsxoQNPM2-K0TBZOyWV6648dlBHfgETZO2RQrL7uwWX4AM-04N0Y3CC6mCFd2FrdTIB
-DEBUG: 2025/01/16 17:21:38 logging.go:37: WakuNode stoped successfully!
-DEBUG: 2025/01/16 17:21:38 logging.go:37: WakuNode destroyed successfully!
+DEBUG: 2025/01/16 17:56:24 logging.go:37: Node1 subscribed to default pubsubtopic
+DEBUG: 2025/01/16 17:56:24 logging.go:37: Successfully subscribed to Waku relay topic: /waku/2/rs/0/0
+DEBUG: 2025/01/16 17:56:24 logging.go:37: Successfully subcribed node1 to topic /waku/2/rs/0/0
+DEBUG: 2025/01/16 17:56:24 logging.go:37: Get node1 ENR
+DEBUG: 2025/01/16 17:56:24 logging.go:37: Waku ENR: enr:-Li4QLelwSQGJG06YJdJq3UBTPVJ4TfxtWwALPDuyvZ1-vxURyOn0d-zEQXglOK581yvt_ji9FGElfUlH4OwTxpL4TICgmlkgnY0gmlwhAAAAACKbXVsdGlhZGRyc4oACATAqAEHBupggnJzkwAACAAAAAEAAgADAAQABQAGAAeJc2VjcDI1NmsxoQPbJrOQlKsOAKxTYmQ1GgM5_1xz6djAoqTFoSJkstyF1IN0Y3CC6mCFd2FrdTIB
+DEBUG: 2025/01/16 17:56:24 logging.go:37: Stop & destroy waku node1 at the end 
+DEBUG: 2025/01/16 17:56:24 logging.go:37: WakuNode stoped successfully!
+DEBUG: 2025/01/16 17:56:24 logging.go:37: WakuNode destroyed successfully!

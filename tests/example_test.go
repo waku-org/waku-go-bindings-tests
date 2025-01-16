@@ -9,7 +9,7 @@ import (
 	//"github.com/stretchr/testify/require"
 )
 
-func TestWakuNodeLifecycle(t *testing.T) {
+func TestSubscribeNodetoTopic(t *testing.T) {
 
 	utilities.LogDebug("Start node1 ")
 	node1, err := libs.StartWakuNodeWithDefaultValues("", 0, "", true, "")
