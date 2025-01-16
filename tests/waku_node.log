@@ -1,0 +1,7 @@
+DEBUG: 2025/01/16 17:21:36 logging.go:37: WakuNode started successfully!
+DEBUG: 2025/01/16 17:21:38 logging.go:37: Default pubsub topic: %s
+/waku/2/rs/0/0
+DEBUG: 2025/01/16 17:21:38 logging.go:37: Successfully subscribed to Waku relay topic: /waku/2/rs/0/0
+DEBUG: 2025/01/16 17:21:38 logging.go:37: Waku ENR: enr:-Li4QFNxDK2AzKnq5DR8PQSLRnkScYUjO79vXODI2qJ8IUuNdqcJvXQQgC0bYKhkirTGJDaL0dHoUL4mFJAreQTbzcACgmlkgnY0gmlwhAAAAACKbXVsdGlhZGRyc4oACATAqAEHBupggnJzkwAACAAAAAEAAgADAAQABQAGAAeJc2VjcDI1NmsxoQNPM2-K0TBZOyWV6648dlBHfgETZO2RQrL7uwWX4AM-04N0Y3CC6mCFd2FrdTIB
+DEBUG: 2025/01/16 17:21:38 logging.go:37: WakuNode stoped successfully!
+DEBUG: 2025/01/16 17:21:38 logging.go:37: WakuNode destroyed successfully!

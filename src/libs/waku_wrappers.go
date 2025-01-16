@@ -51,6 +51,30 @@ func StartWakuNode(localNode *LocalWakuNode) error {
 	return nil
 }
 
+func StartWakuNodeWithDefaultValues(host string, port int, nodeKey string, enableRelay bool, logLevel string) (*LocalWakuNode, error) {
+
+	utilities.LogDebug("Configure waku node with default values: ")
+	config := ConfigWakuNode("", 0, "", true, "")
+
+	utilities.LogDebug("Create waku node")
+	node, err := CreateWakuNode(config)
+	if err != nil {
+		utilities.LogError("Failed to create Waku Node: " + err.Error())
+		return nil, err
+	}
+
+	utilities.LogDebug("Start waku node ")
+	err = StartWakuNode(node)
+	if err != nil {
+		utilities.LogError("Failed to start Waku Node: " + err.Error())
+		return nil, err
+	}
+
+	utilities.LogDebug("Waku Node configured, created, and started successfully!")
+	return node, err
+
+}
+
 // Stop stops the Waku node.
 func (localNode *LocalWakuNode) Stop() error {
 	if err := localNode.Node.WakuStop(); err != nil {
@@ -85,6 +109,7 @@ func (localNode *LocalWakuNode) Version() (string, error) {
 	return version, nil
 }
 
+// Function to return formatted contetn topic
 func (localNode *LocalWakuNode) FormatContentTopic(appName string, appVersion int,
 	contentTopicName string,
 	encoding string,
@@ -104,33 +129,106 @@ func (localNode *LocalWakuNode) FormatContentTopic(appName string, appVersion in
 	return contentTopic, nil
 }
 
-// RelayPublish publishes a message to a pubsub topic.
-func (node *LocalWakuNode) RelayPublish(pubSubTopic, message string, timeoutMs int) error {
-	_, err := node.WakuRelayPublish(pubSubTopic, message, timeoutMs)
-	return err
+// Function to format pubsubtopic
+func (localNode *LocalWakuNode) FormatPubsubTopic(topicName string) (string, error) {
+	pubsubTopic, err := localNode.Node.FormatPubsubTopic(topicName)
+	if err != nil {
+		utilities.LogError("Error formatting pubsub topic: %v\n" + err.Error())
+		return "", err
+	}
+
+	utilities.LogDebug("Formatted pubsub topic: %s\n" + pubsubTopic)
+	return pubsubTopic, nil
 }
 
-// RelaySubscribe subscribes to a pubsub topic.
-func (node *LocalWakuNode) RelaySubscribe(pubSubTopic string) error {
-	return node.WakuRelaySubscribe(pubSubTopic)
+// Function to get default pubsubtopic
+
+func (localNode *LocalWakuNode) WakuDefaultPubsubTopic() (string, error) {
+	defaultPubsubTopic, err := localNode.Node.WakuDefaultPubsubTopic()
+	if err != nil {
+		utilities.LogError("Error retrieving default pubsub topic: %v\n" + err.Error())
+		return "", err
+	}
+
+	utilities.LogDebug("Default pubsub topic: %s\n" + defaultPubsubTopic)
+	return defaultPubsubTopic, nil
 }
 
-// RelayUnsubscribe unsubscribes from a pubsub topic.
-func (node *LocalWakuNode) RelayUnsubscribe(pubSubTopic string) error {
-	return node.WakuRelayUnsubscribe(pubSubTopic)
+// Function publishes a message to a pubsub topic.
+
+func (localNode *LocalWakuNode) WakuRelayPublish(
+	pubsubTopic string,
+	message string,
+	timeoutMs int,
+) (string, error) {
+	msgHash, err := localNode.Node.WakuRelayPublish(pubsubTopic, message, timeoutMs)
+	if err != nil {
+		utilities.LogError("Error publishing Waku relay message: %v\n" + err.Error())
+		return "", err
+	}
+
+	utilities.LogDebug("Waku relay message hash: %s\n" + msgHash)
+	return msgHash, nil
 }
 
-// Connect connects to a peer.
-func (node *LocalWakuNode) Connect(peerMultiAddr string, timeoutMs int) error {
-	return node.WakuConnect(peerMultiAddr, timeoutMs)
+// Function subscribes node to a relay.
+
+func (localNode *LocalWakuNode) WakuRelaySubscribe(pubsubTopic string) error {
+	err := localNode.Node.WakuRelaySubscribe(pubsubTopic)
+	if err != nil {
+		utilities.LogError("Error subscribing to Waku relay: " + err.Error())
+		return err
+	}
+
+	utilities.LogDebug("Successfully subscribed to Waku relay topic: " + pubsubTopic)
+	return nil
 }
 
-// ListenAddresses retrieves the node's listen addresses.
-func (node *LocalWakuNode) ListenAddresses() (string, error) {
-	return node.WakuListenAddresses()
+// Function unsubscribes node  from a pubsub topic.
+
+func (localNode *LocalWakuNode) WakuRelayUnsubscribe(pubsubTopic string) error {
+	err := localNode.Node.WakuRelayUnsubscribe(pubsubTopic)
+	if err != nil {
+		utilities.LogError("Error unsubscribing from Waku relay topic: " + err.Error())
+		return err
+	}
+
+	utilities.LogDebug("Successfully unsubscribed from Waku relay topic: " + pubsubTopic)
+	return nil
 }
 
-// GetMyENR retrieves the node's ENR.
-func (node *LocalWakuNode) GetMyENR() (string, error) {
-	return node.WakuGetMyENR()
+// Function connects to a peer.
+func (localNode *LocalWakuNode) WakuConnect(peerMultiAddr string, timeoutMs int) error {
+	err := localNode.Node.WakuConnect(peerMultiAddr, timeoutMs)
+	if err != nil {
+		utilities.LogError("Error connecting to Waku peer: " + err.Error())
+		return err
+	}
+
+	utilities.LogDebug("Successfully connected to Waku peer: " + peerMultiAddr)
+	return nil
+}
+
+// Function retrieves the node's listen addresses.
+func (localNode *LocalWakuNode) WakuListenAddresses() (string, error) {
+	listenAddresses, err := localNode.Node.WakuListenAddresses()
+	if err != nil {
+		utilities.LogError("Error retrieving Waku listen addresses: " + err.Error())
+		return "", err
+	}
+
+	utilities.LogDebug("Waku listen addresses: " + listenAddresses)
+	return listenAddresses, nil
+}
+
+// Function retrieves the node's ENR.
+func (localNode *LocalWakuNode) WakuGetMyENR() (string, error) {
+	myENR, err := localNode.Node.WakuGetMyENR()
+	if err != nil {
+		utilities.LogError("Error retrieving Waku ENR: " + err.Error())
+		return "", err
+	}
+
+	utilities.LogDebug("Waku ENR: " + myENR)
+	return myENR, nil
 }

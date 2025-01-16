@@ -2,28 +2,58 @@ package main
 
 import (
 	"testing"
+	"time"
 	"waku-go-bindings-tests/src/libs"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"waku-go-bindings-tests/src/utilities"
+	//"github.com/stretchr/testify/assert"
+	//"github.com/stretchr/testify/require"
 )
 
-func TestWakuSetup(t *testing.T) {
-	
-	config := libs.ConfigWakuNode(
-		"0.0.0.0",
-		30304,
-		"11d0dcea28e86f81937a3bd1163473c7fbc0a0db54fd72914849bc47bdf78710",
-		true,
-		"DEBUG",
-	)
+func TestWakuNodeLifecycle(t *testing.T) {
 
-	node, err := libs.CreateWakuNodeWithConfig(config)
-	require.NoError(t, err, "WakuNew should not return an error")
-	require.NotNil(t, node, "WakuNode should not be nil")
+	utilities.LogDebug("Start node1 ")
+	node1, err := libs.StartWakuNodeWithDefaultValues("", 0, "", true, "")
 
-    node.
-	err = node.WakuStart()
-	assert.NoError(t, err, "WakuStart should not return an error")
+	if err != nil {
+		t.Fatalf("Failed to setup and start Waku Node: %v", err)
+	}
 
+	defer func() {
+
+		utilities.LogDebug("Stop & destroy waku node1 at the end ")
+		if stopErr := node1.Stop(); stopErr != nil {
+			t.Errorf("Failed to stop Waku node: %v", stopErr)
+		}
+		if destroyErr := node1.Destroy(); destroyErr != nil {
+			t.Errorf("Failed to destroy Waku node: %v", destroyErr)
+		}
+	}()
+
+	utilities.LogDebug("Sleep for 2 seconds")
+	time.Sleep(2 * time.Second)
+
+	pubsubTopic, err := node1.WakuDefaultPubsubTopic()
+	if err != nil {
+		t.Fatalf("Failed to get default PubSub topic: %v", err)
+	}
+	utilities.LogDebug("Node1 subscribed to default pubsubtopic")
+
+	err = node1.WakuRelaySubscribe(pubsubTopic)
+	if err != nil {
+		t.Fatalf("Failed to subscribe to relay: %v", err)
+	}
+
+	utilities.LogDebug("Successfully subcribed node1 to topic " + pubsubTopic)
+
+	utilities.LogDebug("Get node1 ENR")
+	enr, err := node1.WakuGetMyENR()
+	if err != nil {
+		t.Fatalf("Failed to retrieve ENR: %v", err)
+	}
+
+	if enr == "" {
+		t.Fatal("ENR is empty, expected a valid ENR")
+	}
+
+	t.Logf("Successfully retrieved ENR: %s", enr)
 }
