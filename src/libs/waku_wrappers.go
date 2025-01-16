@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"waku-go-bindings-tests/src/nwaku/examples/golang"
 	"waku-go-bindings-tests/src/utilities"
-	
 )
 
 type WakuConfigData struct {
@@ -48,23 +47,61 @@ func StartWakuNode(localNode *LocalWakuNode) error {
 		return err
 	}
 
-	fmt.Println("WakuNode started successfully!")
+	utilities.LogDebug("WakuNode started successfully!")
 	return nil
 }
 
 // Stop stops the Waku node.
-func (node *LocalWakuNode) Stop() error {
-	return node.WakuStop()
+func (localNode *LocalWakuNode) Stop() error {
+	if err := localNode.Node.WakuStop(); err != nil {
+		utilities.LogError("Failed to stop WakuNode: " + err.Error())
+		return err
+	}
+
+	utilities.LogDebug("WakuNode stoped successfully!")
+	return nil
 }
 
 // Destroy destroys the Waku node.
-func (node *LocalWakuNode) Destroy() error {
-	return node.WakuDestroy()
+func (localNode *LocalWakuNode) Destroy() error {
+	if err := localNode.Node.WakuDestroy(); err != nil {
+		utilities.LogError("Failed to Destroy WakuNode: " + err.Error())
+		return err
+	}
+
+	utilities.LogDebug("WakuNode destroyed successfully!")
+	return nil
 }
 
-// Version returns the Waku node version.
-func (node *LocalWakuNode) Version() (string, error) {
-	return node.WakuVersion()
+// function returns the Waku node version.
+func (localNode *LocalWakuNode) Version() (string, error) {
+	version, err := localNode.Node.WakuVersion()
+	if err != nil {
+		utilities.LogError("Error retrieving Waku version: %v\n" + err.Error())
+		return "", err
+	}
+
+	utilities.LogDebug("Waku version: %s\n" + version)
+	return version, nil
+}
+
+func (localNode *LocalWakuNode) FormatContentTopic(appName string, appVersion int,
+	contentTopicName string,
+	encoding string,
+) (string, error) {
+	contentTopic, err := localNode.Node.FormatContentTopic(
+		appName,
+		appVersion,
+		contentTopicName,
+		encoding,
+	)
+	if err != nil {
+		utilities.LogError("Error formatting content topic: %v\n" + err.Error())
+		return "", err
+	}
+
+	utilities.LogDebug("Formatted content topic: %s\n" + contentTopic)
+	return contentTopic, nil
 }
 
 // RelayPublish publishes a message to a pubsub topic.
