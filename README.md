@@ -1,5 +1,5 @@
 # waku-go-bindings-tests
-# This test framework test functionality of waku nodes [creation - relay - topics subscribtion]   using go wrappers
+ This test framework test functionality of waku nodes [creation - relay - topics subscribtion]   using go wrappers
 # Test framework design 
 ![My Diagram](src/images/framework_design.png) 
 
