@@ -47,7 +47,6 @@ This test framework verifies the functionality of Waku nodes—**creation**, **r
 
 ## Notes
 - Ensure Go is properly installed and configured.
-- Follow all steps carefully for successful test execution.
 
 ---
 
