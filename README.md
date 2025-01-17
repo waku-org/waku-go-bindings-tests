@@ -14,7 +14,7 @@ This test framework verifies the functionality of Waku nodes—**creation**, **r
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-repo/waku-go-bindings-tests
+   git clone https://github.com/waku-org/waku-go-bindings-tests
    ```
 
 2. **Clone the Submodule:**
